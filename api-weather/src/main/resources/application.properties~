@@ -1,0 +1,10 @@
+# Configurações gerais da aplicação
+spring.application.name=api-weather
+server.port=9090
+
+# Prometheus
+management.endpoints.web.exposure.include=health,info,prometheus
+management.endpoint.prometheus.enabled=true
+
+# PERFIL
+spring.profiles.active=docker

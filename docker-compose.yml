@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: weather_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 5
+      timeout: 5s
+
+  python-etl:
+    build:
+      context: ./pythonETL
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./pythonETL/.env:/app/.env:ro
+    command: ["python", "main.py"]
+
+  api-weather:
+    build:
+      context: ./api-weather
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "9090:9090"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    mem_limit: 512m
+    command: ["java", "-Xmx400m", "-jar", "app.jar"]
+
+volumes:
+  pgdata:

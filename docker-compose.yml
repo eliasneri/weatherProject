@@ -46,8 +46,12 @@ services:
 
   prometheus:
     image: prom/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.listen-address=:9091"
     ports:
-      - "9090:9090"
+      - "9091:9091"
+
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
 
@@ -63,6 +67,7 @@ services:
       - grafana-storage:/var/lib/grafana
       - ./grafana/provisioning/datasources/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
       - ./grafana/provisioning/dashboards/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
     depends_on:
       - prometheus
 

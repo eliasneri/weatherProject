@@ -67,7 +67,7 @@ services:
       - grafana-storage:/var/lib/grafana
       - ./grafana/provisioning/datasources/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
       - ./grafana/provisioning/dashboards/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
-      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/provisioning/dashboards:/var/lib/grafana/dashboards
     depends_on:
       - prometheus
 
